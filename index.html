@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQLMap Pro GUI - Advanced SQL Injection Testing Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>SQLMap Pro GUI</h1>
+                    <span class="version">v2.0</span>
+                </div>
+            </div>
+            <div class="subtitle">
+                <span class="subtitle-main">Professional SQL Injection Testing Interface</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-cogs"></i> Configuration</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="config-progress"></div>
+                    </div>
+                </div>
+                
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="target">
+                            <i class="fas fa-bullseye"></i>
+                            Target
+                        </button>
+                        <button class="tab-btn" data-tab="request">
+                            <i class="fas fa-globe"></i>
+                            Request
+                        </button>
+                        <button class="tab-btn" data-tab="detection">
+                            <i class="fas fa-search"></i>
+                            Detection
+                        </button>
+                        <button class="tab-btn" data-tab="enumeration">
+                            <i class="fas fa-list"></i>
+                            Enumeration
+                        </button>
+                        <button class="tab-btn" data-tab="advanced">
+                            <i class="fas fa-cogs"></i>
+                            Advanced
+                        </button>
+                        <button class="tab-btn innovation-tab" data-tab="innovation">
+                            <i class="fas fa-brain"></i>
+                            AI Assistant
+                            <span class="new-badge">NEW</span>
+                        </button>
+                    </div>
+                </div>
+
+                <form id="sqlmap-form">
+                    <div class="tab-content active" id="target-tab">
+                        <div class="section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-bullseye"></i> Target Configuration</h3>
+                            <span class="section-description">Define your testing target</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="url">Target URL *</label>
+                            <input type="url" id="url" placeholder="http://example.com/vuln.php?id=1" required>
+                            <div class="help-text">Primary target URL for SQL injection testing</div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="direct">Direct DB Connection</label>
+                                <input type="text" id="direct" placeholder="mysql://user:pass@host/db">
+                            </div>
+                            <div class="form-group">
+                                <label for="logfile">Proxy Log File</label>
+                                <input type="text" id="logfile" placeholder="burp_log.xml">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bulkfile">Bulk Targets File</label>
+                                <input type="text" id="bulkfile" placeholder="targets.txt">
+                            </div>
+                            <div class="form-group">
+                                <label for="requestfile">Request File</label>
+                                <input type="text" id="requestfile" placeholder="request.txt">
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="tab-content" id="request-tab">
+                        <div class="section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-globe"></i> Request Settings</h3>
+                            <span class="section-description">Configure HTTP request parameters</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="user-agent">User Agent</label>
+                            <select id="user-agent">
+                                <option value="">Default</option>
+                                <option value="random">Random Agent</option>
+                                <option value="mobile">Mobile Agent</option>
+                                <option value="custom">Custom Agent</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="custom-agent-group" style="display: none;">
+                            <input type="text" id="custom-agent" placeholder="Custom User-Agent string">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="method">HTTP Method</label>
+                                <select id="method">
+                                    <option value="">Auto</option>
+                                    <option value="GET">GET</option>
+                                    <option value="POST">POST</option>
+                                    <option value="PUT">PUT</option>
+                                    <option value="DELETE">DELETE</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="data">POST Data</label>
+                                <input type="text" id="data" placeholder="id=1&name=test">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cookie">Cookie</label>
+                            <input type="text" id="cookie" placeholder="PHPSESSID=abc123; auth=token">
+                        </div>
+                        <div class="form-group">
+                            <label for="headers">Extra Headers</label>
+                            <textarea id="headers" placeholder="X-Forwarded-For: 127.0.0.1&#10;Authorization: Bearer token"></textarea>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="tab-content" id="detection-tab">
+                        <div class="section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-search"></i> Detection & Techniques</h3>
+                            <span class="section-description">Configure detection methods and injection techniques</span>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="level">Level (1-5)</label>
+                                <select id="level">
+                                    <option value="1">1 - Basic</option>
+                                    <option value="2">2 - Cookie</option>
+                                    <option value="3">3 - User-Agent/Referer</option>
+                                    <option value="4">4 - HTTP Auth</option>
+                                    <option value="5">5 - Host header</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="risk">Risk (1-3)</label>
+                                <select id="risk">
+                                    <option value="1">1 - Safe</option>
+                                    <option value="2">2 - Heavy queries</option>
+                                    <option value="3">3 - OR-based queries</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="technique">Techniques</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="tech-b" value="B" checked>
+                                    <span>Boolean-based blind</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="tech-e" value="E" checked>
+                                    <span>Error-based</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="tech-u" value="U" checked>
+                                    <span>Union query-based</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="tech-s" value="S" checked>
+                                    <span>Stacked queries</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="tech-t" value="T" checked>
+                                    <span>Time-based blind</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="tech-q" value="Q" checked>
+                                    <span>Inline queries</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="tab-content" id="enumeration-tab">
+                        <div class="section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-list"></i> Enumeration Options</h3>
+                            <span class="section-description">Select data to extract from the database</span>
+                        </div>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enum-all">
+                                <span>Retrieve Everything (-a)</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enum-banner">
+                                <span>DBMS Banner (-b)</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enum-current-user">
+                                <span>Current User</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enum-current-db">
+                                <span>Current Database</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enum-hostname">
+                                <span>Hostname</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enum-is-dba">
+                                <span>Is DBA</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enum-users">
+                                <span>Users</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enum-passwords">
+                                <span>Password Hashes</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enum-dbs">
+                                <span>Databases</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enum-tables">
+                                <span>Tables</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enum-columns">
+                                <span>Columns</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enum-dump">
+                                <span>Dump Data</span>
+                            </label>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="database">Database (-D)</label>
+                                <input type="text" id="database" placeholder="database_name">
+                            </div>
+                            <div class="form-group">
+                                <label for="table">Table (-T)</label>
+                                <input type="text" id="table" placeholder="table_name">
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="tab-content" id="advanced-tab">
+                        <div class="section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-cogs"></i> Advanced Options</h3>
+                            <span class="section-description">Performance and security settings</span>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="threads">Threads</label>
+                                <input type="number" id="threads" min="1" max="10" value="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="delay">Delay (seconds)</label>
+                                <input type="number" id="delay" min="0" step="0.1" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="timeout">Timeout</label>
+                                <input type="number" id="timeout" min="1" placeholder="30">
+                            </div>
+                            <div class="form-group">
+                                <label for="retries">Retries</label>
+                                <input type="number" id="retries" min="0" placeholder="3">
+                            </div>
+                        </div>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="batch">
+                                <span>Batch Mode (No user input)</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="random-agent">
+                                <span>Random User Agent</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="tor">
+                                <span>Use Tor Network</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="check-tor">
+                                <span>Check Tor Connection</span>
+                            </label>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="tab-content" id="innovation-tab">
+                        <div class="section innovation">
+                        <div class="section-header">
+                            <h3><i class="fas fa-brain"></i> 🚀 Smart Payload Assistant</h3>
+                            <span class="section-description">AI-powered vulnerability assessment and payload optimization</span>
+                        </div>
+                        <div class="innovation-content">
+                            <p>AI-powered payload generation and vulnerability assessment</p>
+                            <div class="form-group">
+                                <label for="target-type">Target Type</label>
+                                <select id="target-type">
+                                    <option value="">Auto-detect</option>
+                                    <option value="login">Login Form</option>
+                                    <option value="search">Search Function</option>
+                                    <option value="product">Product/Item View</option>
+                                    <option value="api">API Endpoint</option>
+                                    <option value="cms">CMS/Admin Panel</option>
+                                </select>
+                            </div>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="smart-payloads">
+                                    <span>Generate Smart Payloads</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="waf-bypass">
+                                    <span>WAF Bypass Suggestions</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="stealth-mode">
+                                    <span>Stealth Mode (Evade Detection)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="action-section">
+                        <button type="button" id="generate-cmd" class="btn btn-primary">
+                            <i class="fas fa-terminal"></i>
+                            Generate Command
+                        </button>
+                        <button type="button" id="validate-target" class="btn btn-secondary">
+                            <i class="fas fa-check-circle"></i>
+                            Validate Target
+                        </button>
+                        <button type="reset" class="btn btn-tertiary">
+                            <i class="fas fa-undo"></i>
+                            Reset Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="right-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-terminal"></i> Command Center</h2>
+                    <div class="status-indicators">
+                        <div class="status-item">
+                            <span class="status-dot" id="target-status"></span>
+                            <span>Target</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-dot" id="config-status"></span>
+                            <span>Config</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-dot" id="command-status"></span>
+                            <span>Ready</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="output-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-code"></i> Generated Command</h3>
+                        <div class="header-actions">
+                            <button id="copy-cmd" class="btn btn-copy" disabled>
+                                <i class="fas fa-copy"></i>
+                                Copy
+                            </button>
+                            <button id="format-cmd" class="btn btn-format">
+                                <i class="fas fa-align-left"></i>
+                                Format
+                            </button>
+                        </div>
+                    </div>
+                    <div class="command-output">
+                        <div class="command-header">
+                            <span class="command-label">SQLMap Command:</span>
+                            <span class="command-length" id="cmd-length">0 characters</span>
+                        </div>
+                        <div id="command-preview">Click "Generate Command" to see your SQLMap command...</div>
+                    </div>
+                </div>
+
+                <div class="suggestions-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-lightbulb"></i> Smart Suggestions</h3>
+                        <span class="suggestion-count" id="suggestion-count">1 tip</span>
+                    </div>
+                    <div id="suggestions-content">
+                        <div class="suggestion-item">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Configure your target URL to get personalized recommendations</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="presets-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-star"></i> Quick Presets</h3>
+                        <span class="presets-description">One-click professional configurations</span>
+                    </div>
+                    <div class="preset-grid">
+                        <div class="preset-card" data-preset="basic">
+                            <div class="preset-icon">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="preset-info">
+                                <h4>Basic Scan</h4>
+                                <p>Safe, fast scan for beginners</p>
+                                <div class="preset-tags">
+                                    <span class="tag">Level 1</span>
+                                    <span class="tag">Risk 1</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="preset-card" data-preset="aggressive">
+                            <div class="preset-icon aggressive">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="preset-info">
+                                <h4>Aggressive</h4>
+                                <p>Comprehensive high-risk testing</p>
+                                <div class="preset-tags">
+                                    <span class="tag">Level 5</span>
+                                    <span class="tag">Risk 3</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="preset-card" data-preset="stealth">
+                            <div class="preset-icon stealth">
+                                <i class="fas fa-user-ninja"></i>
+                            </div>
+                            <div class="preset-info">
+                                <h4>Stealth</h4>
+                                <p>Low-profile evasion testing</p>
+                                <div class="preset-tags">
+                                    <span class="tag">Delays</span>
+                                    <span class="tag">Random</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="preset-card" data-preset="comprehensive">
+                            <div class="preset-icon comprehensive">
+                                <i class="fas fa-microscope"></i>
+                            </div>
+                            <div class="preset-info">
+                                <h4>Comprehensive</h4>
+                                <p>Full enumeration and extraction</p>
+                                <div class="preset-tags">
+                                    <span class="tag">All Data</span>
+                                    <span class="tag">Multi-thread</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <span>SQLMap Pro GUI v2.0</span>
+                    <span class="separator">|</span>
+                    <span>Penetration Testing Tool</span>
+                </div>
+                
+            </div>
+        </footer>
+    </div>
+
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Analyzing target and generating optimized command...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
