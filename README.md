@@ -18,4 +18,6 @@ A simple web based tool that generates SQLMap commands for penetration testing.
 
 ---
 
+![Alt text](https://i.ibb.co/93ddL56W/screencapture-file-C-Users-Loghi-SQLIMap-SQLi-Gen-index-html-2025-09-04-00-58-15.png)
+
 **LSDeep [ https://t.me/lsd33p ]** ⚡
